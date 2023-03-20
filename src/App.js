@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import TextEditor from './TextEditor';
 import Layout from './Layout';
 import SavedText from './SavedText';
+import { GoogleLogin } from '@react-oauth/google';
 
 function App() {
 
