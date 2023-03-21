@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from "react-router-dom";
 
 function TextEditor( ) {
-    const [getCurrNote , onDeleteNote, onUpdateNote, notes,name, noteID] = useOutletContext();
+    const [getCurrNote , onDeleteNote, onUpdateNote, notes,user, noteID] = useOutletContext();
     const currNote = getCurrNote();
     const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ function TextEditor( ) {
 
     const onSaveNote = async () => {
         const newNote = getCurrNote();
-        console.log(JSON.stringify({ ...newNote, email: name }))
+        console.log(JSON.stringify({ ...newNote, email: user }))
         console.log(newNote);
         const res = await fetch("https://si43ha6zkkuq3pr3ja7pf4t7zu0xfpbt.lambda-url.ca-central-1.on.aws/",
           {
@@ -34,7 +34,7 @@ function TextEditor( ) {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...newNote, email: name })
+            body: JSON.stringify({ ...newNote, email: user })
     
           }
         );

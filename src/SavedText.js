@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 
 function SavedText( ) {
-    const [getCurrNote , onDeleteNote, onUpdateNote, notes, noteID] = useOutletContext();
+    const [getCurrNote , onDeleteNote, onUpdateNote, notes,user, noteID] = useOutletContext();
     const currNote = getCurrNote();
     const navigate = useNavigate();
 

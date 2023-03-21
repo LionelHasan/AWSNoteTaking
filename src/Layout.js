@@ -155,7 +155,7 @@ function Layout() {
             <Sidebar notes={notes} onNewNote={onNewNote} currNote={currNote} setCurrNote={setCurrNote} noteID={noteID} />
           </section>
           <section id="right-side">
-            <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes,profile.name, noteID]} />
+            <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes,user, noteID]} />
           </section>
         </div>
       </div>
