@@ -80,9 +80,12 @@ resource "aws_iam_policy" "logs" {
       "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "dynamodb:*"
+
+
       ],
-      "Resource": "arn:aws:logs:*:*:*",
+      "Resource": ["arn:aws:logs:*:*:*", "arn:aws:dynamodb:*:*:table/*", "arn:aws:dynamodb:*:*:*/*"],
       "Effect": "Allow"
     }
   ]
@@ -120,15 +123,17 @@ resource "aws_dynamodb_table" "notes" {
   read_capacity = 1
 # up to 1KB per second
   write_capacity = 1
-# we only need a student id to find an item in the table; therefore, we 
-# don't need a sort key here
-  hash_key = "note_id"
+
+  hash_key = "id"
 # the hash_key data type is string
 attribute {
-    name = "note_id"
-    type = "N"
+    name = "id"
+    type = "S"
   }
+  
 }
+
+
 
 # show the Function URL after creation
 output "lambda_url" {

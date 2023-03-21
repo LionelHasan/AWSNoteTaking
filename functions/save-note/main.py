@@ -5,12 +5,11 @@ import boto3
 dynamodb_resource = boto3.resource("dynamodb")
 table = dynamodb_resource.Table("notes") 
 
-def savenote(event, context):
-    item = {
-    "noteid": 3098390,
-    }
+def lambda_handler(event, context):
+
         # Setting the variable body to the json body attribute (sent by the endpoint via LambdaURL), json loads converts it to a python dictionary
     body = json.loads(event["body"])
+
     try:
         table.put_item(Item=body)
     except Exception as exp:

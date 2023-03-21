@@ -9,24 +9,25 @@ import { googleLogout, useGoogleLogin, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
 
-function Layout( ) {
+function Layout() {
   const navigate = useNavigate();
   const { noteID } = useParams();
   const [userLogged, setUserLogged] = useState(false);
-  const [ profile, setProfile ] = useState(null);
-  const [ user, setUser ] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState([]);
 
 
-  const[notes, setNotes] = useState(() => {
+  const [notes, setNotes] = useState(() => {
     const yesNote = localStorage.getItem('notes');
-    if(yesNote){
+    if (yesNote) {
       const allNotes = JSON.parse(localStorage.notes)
       return allNotes;
     }
+
     return [];
   });
 
-  const[currNote, setCurrNote] = useState(false);
+  const [currNote, setCurrNote] = useState(false);
   const getCurrNote = () => {
     return notes[currNote]
   }
@@ -44,15 +45,15 @@ function Layout( ) {
   };
 
   const onDeleteNote = (idToDel) => {
-    const answer  = window.confirm("Are you sure?");
+    const answer = window.confirm("Are you sure?");
     if (answer) {
-      setNotes(notes.filter((note) => note.id !== idToDel ));
+      setNotes(notes.filter((note) => note.id !== idToDel));
     }
   }
 
   const onUpdateNote = (updatedNote) => {
-    const updatedNotesArr = notes.map((note)=>{
-      if(note.id === notes[currNote].id) { 
+    const updatedNotesArr = notes.map((note) => {
+      if (note.id === notes[currNote].id) {
         return updatedNote;
       }
       return note;
@@ -62,7 +63,9 @@ function Layout( ) {
 
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
-  },[notes]);
+
+
+  }, [notes]);
 
   const onHideSideBar = () => {
     const element = document.getElementById("left-side");
@@ -75,68 +78,86 @@ function Layout( ) {
     }
   }
 
-  useEffect(()=>{
-    if (noteID != null){
-      setCurrNote(noteID-1)
+  useEffect(() => {
+    if (noteID != null) {
+      setCurrNote(noteID - 1)
     }
   }, [noteID]);
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {setUser(codeResponse); setUserLogged(true);},
+    onSuccess: (codeResponse) => { setUser(codeResponse); setUserLogged(true); },
     onError: (error) => console.log('Login Failed:', error)
   });
 
   useEffect(
     () => {
-        if (user.length != 0) {
-            axios
-                .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-                    headers: {
-                        Authorization: `Bearer ${user.access_token}`,
-                        Accept: 'application/json'
-                    }
-                })
-                .then((res) => {
-                    setProfile(res.data);
-                })
-                .catch((err) => console.log(err));
-        }
+      if (user.length != 0) {
+        axios
+          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: 'application/json'
+            }
+          })
+          .then((res) => {
+            setProfile(res.data);
+          })
+          .catch((err) => console.log(err));
+      }
     },
-    [ user ]
+    [user]
   );
 
   const logOut = () => {
-      googleLogout();
-      setProfile(null);
-      setUserLogged(false);
+    googleLogout();
+    setProfile(null);
+    setUserLogged(false);
   };
+
+  const onSaveNote = async () => {
+    const newNote = getCurrNote();
+    console.log(newNote);
+    setNotes([{ ...newNote }, ...notes]) // Contains everything present in the previous array, and now the new note
+    const res = await fetch("https://si43ha6zkkuq3pr3ja7pf4t7zu0xfpbt.lambda-url.ca-central-1.on.aws/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...newNote, email: user })
+
+      }
+    );
+    const jsonRes = await res.json();
+    console.log(jsonRes)
+  }
 
   return (
     <>
       <div id="main-container">
-          <nav>
-              <button id="notes-vision" onClick={() => onHideSideBar()}>&#9776;</button>
-              <div className="nav-header">
-                  <h1>Lotion</h1>
-                  <h6>Like Notion, but worse</h6>
-              </div>
-              <div id="profile-container">
-                {profile != null && <button id="logOutButton" onClick={logOut}>{profile.name} (Log Out)</button>}
-              </div>
-          </nav>
-
-          <div id="googleLogin" className={(userLogged) ? "hideGoogle" : ""}>
-            <button onClick={() => login()} className={(userLogged) ? "hideGoogle" : ""}>Sign in to Lotion with <i className="fab fa-google"></i> </button>
+        <nav>
+          <button id="notes-vision" onClick={() => onHideSideBar()}>&#9776;</button>
+          <div className="nav-header">
+            <h1>Lotion</h1>
+            <h6>Like Notion, but worse</h6>
           </div>
-
-          <div id="note-container" className={(userLogged) ? "" : "hideGoogle"}>
-              <section id="left-side">
-                <Sidebar notes={notes} onNewNote={onNewNote} currNote={currNote} setCurrNote={setCurrNote} noteID={noteID}/>
-              </section>
-              <section id="right-side">
-                <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes, noteID]}/>
-              </section>
+          <div id="profile-container">
+            {profile != null && <button id="logOutButton" onClick={logOut}>{profile.name} (Log Out)</button>}
           </div>
+        </nav>
+
+        <div id="googleLogin" className={(userLogged) ? "hideGoogle" : ""}>
+          <button onClick={() => login()} className={(userLogged) ? "hideGoogle" : ""}>Sign in to Lotion with <i className="fab fa-google"></i> </button>
+        </div>
+
+        <div id="note-container" className={(userLogged) ? "" : "hideGoogle"}>
+          <section id="left-side">
+            <Sidebar notes={notes} onNewNote={onNewNote} currNote={currNote} setCurrNote={setCurrNote} noteID={noteID} />
+          </section>
+          <section id="right-side">
+            <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes,profile.name, noteID]} />
+          </section>
+        </div>
       </div>
     </>
   )
