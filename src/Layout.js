@@ -5,10 +5,17 @@ import { Outlet, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import uuid from "react-uuid";
 import Sidebar from "./Sidebar";
+import { googleLogout, useGoogleLogin, GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+
 
 function Layout( ) {
   const navigate = useNavigate();
   const { noteID } = useParams();
+  const [userLogged, setUserLogged] = useState(false);
+  const [ profile, setProfile ] = useState(null);
+  const [ user, setUser ] = useState([]);
+
 
   const[notes, setNotes] = useState(() => {
     const yesNote = localStorage.getItem('notes');
@@ -60,11 +67,11 @@ function Layout( ) {
   const onHideSideBar = () => {
     const element = document.getElementById("left-side");
     const className = element.className;
-    if (className == "visible") {
-      element.className = "hidden";
+    if (className == "hidden") {
+      element.className = "visible";
     }
     else {
-      element.className = "visible";
+      element.className = "hidden";
     }
   }
 
@@ -73,6 +80,36 @@ function Layout( ) {
       setCurrNote(noteID-1)
     }
   }, [noteID]);
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {setUser(codeResponse); setUserLogged(true);},
+    onError: (error) => console.log('Login Failed:', error)
+  });
+
+  useEffect(
+    () => {
+        if (user.length != 0) {
+            axios
+                .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.access_token}`,
+                        Accept: 'application/json'
+                    }
+                })
+                .then((res) => {
+                    setProfile(res.data);
+                })
+                .catch((err) => console.log(err));
+        }
+    },
+    [ user ]
+  );
+
+  const logOut = () => {
+      googleLogout();
+      setProfile(null);
+      setUserLogged(false);
+  };
 
   return (
     <>
@@ -83,14 +120,21 @@ function Layout( ) {
                   <h1>Lotion</h1>
                   <h6>Like Notion, but worse</h6>
               </div>
+              <div id="profile-container">
+                {profile != null && <button id="logOutButton" onClick={logOut}>{profile.name} (Log Out)</button>}
+              </div>
           </nav>
 
-          <div id="note-container"> 
-              <section id="left-side" className="visible">
-                  <Sidebar notes={notes} onNewNote={onNewNote} currNote={currNote} setCurrNote={setCurrNote} noteID={noteID}/>
+          <div id="googleLogin" className={(userLogged) ? "hideGoogle" : ""}>
+            <button onClick={() => login()} className={(userLogged) ? "hideGoogle" : ""}>Sign in to Lotion with <i className="fab fa-google"></i> </button>
+          </div>
+
+          <div id="note-container" className={(userLogged) ? "" : "hideGoogle"}>
+              <section id="left-side">
+                <Sidebar notes={notes} onNewNote={onNewNote} currNote={currNote} setCurrNote={setCurrNote} noteID={noteID}/>
               </section>
               <section id="right-side">
-                  <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes, noteID]}/>
+                <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes, noteID]}/>
               </section>
           </div>
       </div>

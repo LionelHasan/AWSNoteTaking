@@ -274,3 +274,35 @@ h6 {
 .active{
   background-color: #bbb;
 }
+
+.hideGoogle {
+  display: none !important;
+}
+#googleLogin{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+}
+#googleLogin button{
+  background-color: #ffffff5c;
+  border: 1px solid rgba(0, 0, 0, 0.215);
+  border-radius: .25rem;
+  padding: 15px 32px;
+  font-size:16px;
+}
+#googleLogin button:hover {
+  background-color: #e5e4e4;
+}
+#logOutButton {
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  font-weight:600;
+}
+#logOutButton:hover {
+  text-decoration: underline;
+}
+#profile-container {
+  margin-right: 20px;
+}
