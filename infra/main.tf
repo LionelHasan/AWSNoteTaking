@@ -335,7 +335,15 @@ resource "aws_dynamodb_table" "notes" {
 # up to 1KB per second
   write_capacity = 1
 
-  hash_key = "id"
+  range_key = "id"
+  hash_key = "email"
+
+
+  attribute {
+    name = "email"
+    type = "S"
+  }
+
 # the hash_key data type is string
 attribute {
     name = "id"
