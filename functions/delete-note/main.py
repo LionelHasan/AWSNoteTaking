@@ -9,10 +9,11 @@ def lambda_handler(event, context):
 
         # Setting the variable body to the json body attribute (sent by the endpoint via LambdaURL), json loads converts it to a python dictionary
     body = json.loads(event["body"])
-    
+    print(body)
+
 
     try:
-        table.delete_item(Item=body.get("id"))
+        table.delete_item()
     except Exception as exp:
         print("exception: {exp}") # Can send the exception to Cloudwatch
         return {
@@ -25,7 +26,7 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": "success"
+            "message": "deletsuccess"
         })
 
     }
