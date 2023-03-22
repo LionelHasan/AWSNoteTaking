@@ -9,7 +9,7 @@ def lambda_handler(event, context):
 
         # Setting the variable body to the json body attribute (sent by the endpoint via LambdaURL), json loads converts it to a python dictionary
     body = json.loads(event["body"])
-
+   
     try:
         table.put_item(Item=body)
     except Exception as exp:
