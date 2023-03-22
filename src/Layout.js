@@ -54,15 +54,26 @@ function Layout() {
       const newNote = getCurrNote();
       console.log(JSON.stringify({ ...newNote, email: profile.email }))
       console.log(newNote);
+      console.log(user);
 
       const res = await fetch("https://vtsjzzb5g7o7myq3gpr4axc6bq0amqtj.lambda-url.ca-central-1.on.aws/",
         {
+
+          version:"2.0",
           method: "DELETE",
+          rawPath: "/my/path",
+          rawQueryString: "parameter1=value1&parameter1=value2&parameter2=value",
           headers: {
             "Content-Type": "application/json",
+              "accesstoken": user.access_token,
+              "email": profile.email,
+              "id": newNote.id
+          },
+          queryStringParameters: {
+            "id": newNote.id,
+            "email": profile.email
           },
           body: JSON.stringify({ ...newNote, email: profile.email })
-  
         }
       );
       const jsonRes = await res.json();
@@ -161,7 +172,7 @@ function Layout() {
             <Sidebar notes={notes} onNewNote={onNewNote} currNote={currNote} setCurrNote={setCurrNote} noteID={noteID} />
           </section>
           <section id="right-side">
-            <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes,profile, noteID]} />
+            <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes,profile, noteID,user]} />
           </section>
         </div>
       </div>
