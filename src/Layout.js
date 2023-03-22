@@ -44,12 +44,34 @@ function Layout() {
     navigate(`/notes/1/edit`)
   };
 
-  const onDeleteNote = (idToDel) => {
+  const onDeleteNote = async (idToDel) => {
     const answer = window.confirm("Are you sure?");
     if (answer) {
       setNotes(notes.filter((note) => note.id !== idToDel));
+      const answer = window.confirm("Are you sure?");
+    if (answer) {
+      setNotes(notes.filter((note) => note.id !== idToDel));
+      const newNote = getCurrNote();
+      console.log(JSON.stringify({ ...newNote, email: profile.email }))
+      console.log(newNote);
+
+      const res = await fetch("https://vtsjzzb5g7o7myq3gpr4axc6bq0amqtj.lambda-url.ca-central-1.on.aws/",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...newNote, email: profile.email })
+  
+        }
+      );
+      const jsonRes = await res.json();
+      console.log(JSON.stringify(jsonRes));
+
+      
     }
   }
+}
 
   const onUpdateNote = (updatedNote) => {
     const updatedNotesArr = notes.map((note) => {
@@ -114,23 +136,7 @@ function Layout() {
     setUserLogged(false);
   };
 
-  const onSaveNote = async () => {
-    const newNote = getCurrNote();
-    console.log(newNote);
-    setNotes([{ ...newNote }, ...notes]) // Contains everything present in the previous array, and now the new note
-    const res = await fetch("https://si43ha6zkkuq3pr3ja7pf4t7zu0xfpbt.lambda-url.ca-central-1.on.aws/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...newNote, email: user })
-
-      }
-    );
-    const jsonRes = await res.json();
-    console.log(jsonRes)
-  }
+ 
 
   return (
     <>
@@ -155,7 +161,7 @@ function Layout() {
             <Sidebar notes={notes} onNewNote={onNewNote} currNote={currNote} setCurrNote={setCurrNote} noteID={noteID} />
           </section>
           <section id="right-side">
-            <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes,user, noteID]} />
+            <Outlet context={[getCurrNote, onDeleteNote, onUpdateNote, notes,profile, noteID]} />
           </section>
         </div>
       </div>
