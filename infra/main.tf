@@ -129,7 +129,7 @@ data "archive_file" "delete-lambda" {
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
   source_file = "../functions/delete-note/main.py"
-  output_path = "artifact.zip"
+  output_path = "artifact1.zip"
 }
 
 # create a Lambda function
@@ -138,7 +138,7 @@ resource "aws_lambda_function" "delete-lambda" {
   role             = aws_iam_role.lambda.arn
   function_name    = local.delete_note
   handler          = local.handler_name
-  filename         = local.artifact_name
+  filename         = "artifact1.zip"
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
@@ -210,7 +210,7 @@ data "archive_file" "get-lambda" {
   # this file (main.py) needs to exist in the same folder as this 
   # Terraform configuration file
   source_file = "../functions/get-notes/main.py"
-  output_path = "artifact.zip"
+  output_path = "artifact2.zip"
 }
 
 # create a Lambda function
@@ -219,7 +219,7 @@ resource "aws_lambda_function" "get-lambda" {
   role             = aws_iam_role.lambda.arn
   function_name    = local.get_note
   handler          = local.handler_name
-  filename         = local.artifact_name
+  filename         = "artifact2.zip"
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
