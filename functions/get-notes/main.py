@@ -8,6 +8,8 @@ def lambda_handler(event, context):
 
     try:
         email = event['queryStringParameters']['email']
+        access_token = event["headers"]["access_token"]
+
         # noteID = event['queryStringParameters']['id']
         # response = table.get_item(Key={'email': f'{email}', 'id': f'{noteID}'})
 

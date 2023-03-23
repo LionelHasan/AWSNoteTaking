@@ -8,15 +8,11 @@ table = dynamodb_resource.Table("notes")
 def lambda_handler(event, context):
 
         # Setting the variable body to the json body attribute (sent by the endpoint via LambdaURL), json loads converts it to a python dictionary
-    headers = event["headers"]
-    print(event)
-
-    print(headers)
-    access_token = headers.get("accesstoken")
-    email = headers.get("email")
-    id = headers.get("id")
-    print(email)
+    access_token = event["headers"]["access_token"]
     print(access_token)
+    email = event["queryStringParameters"]["email"]
+    id = event["queryStringParameters"]["id"]
+
     print(id)
 
     try:
