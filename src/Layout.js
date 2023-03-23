@@ -64,7 +64,8 @@ function Layout() {
     console.log(profile)
     try {
       // let res = await fetch("https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email=ericmeiemail@gmail.com&id=4bd3221b-05c9-13c8-a7ba-5f526dc389b8", {
-      let res = await fetch("https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email=ericmeiemail@gmail.com", {
+      // let res = await fetch("https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email=ericmeiemail@gmail.com", {
+      let res = await fetch(`https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email='${profile.email}`, {
       });
       let jsonRes = await res.json();
       // console.log(JSON.stringify(jsonRes));
