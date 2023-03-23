@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from "react-router-dom";
 
 function TextEditor( ) {
-    const [getCurrNote , onDeleteNote, onUpdateNote, notes,profile, noteID] = useOutletContext();
+    const [getCurrNote , onDeleteNote, onUpdateNote, notes,profile, noteID,user] = useOutletContext();
     const currNote = getCurrNote();
     const navigate = useNavigate();
 
