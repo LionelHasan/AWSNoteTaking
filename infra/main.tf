@@ -139,7 +139,7 @@ resource "aws_lambda_function" "delete-lambda" {
   function_name    = local.delete_note
   handler          = local.handler_name
   filename         = "artifact1.zip"
-  source_code_hash = data.archive_file.lambda.output_base64sha256
+  source_code_hash = data.archive_file.delete-lambda.output_base64sha256
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
   runtime = "python3.9"
@@ -220,7 +220,7 @@ resource "aws_lambda_function" "get-lambda" {
   function_name    = local.get_note
   handler          = local.handler_name
   filename         = "artifact2.zip"
-  source_code_hash = data.archive_file.lambda.output_base64sha256
+  source_code_hash = data.archive_file.get-lambda.output_base64sha256
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
   runtime = "python3.9"
@@ -293,7 +293,7 @@ resource "aws_lambda_function_url" "delete_url" {
     
     allow_credentials = true
     allow_origins     = ["*"]
-    allow_methods     = ["GET", "POST", "PUT", "DELETE"]
+    allow_methods     = ["DELETE"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }
@@ -312,7 +312,7 @@ resource "aws_lambda_function_url" "get_url" {
     
     allow_credentials = true
     allow_origins     = ["*"]
-    allow_methods     = ["GET", "POST", "PUT", "DELETE"]
+    allow_methods     = ["GET"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }

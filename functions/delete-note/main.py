@@ -8,14 +8,21 @@ table = dynamodb_resource.Table("notes")
 def lambda_handler(event, context):
 
         # Setting the variable body to the json body attribute (sent by the endpoint via LambdaURL), json loads converts it to a python dictionary
-    body = json.loads(event["body"])
-    print(body.get("id"))
-    print(body.get("email"))
+    headers = event["headers"]
+    print(event)
+
+    print(headers)
+    access_token = headers.get("accesstoken")
+    email = headers.get("email")
+    id = headers.get("id")
+    print(email)
+    print(access_token)
+    print(id)
 
     try:
         table.delete_item(Key={
-            'id': body.get("id"),
-            'email':body.get("email")
+            'id': id,
+            'email':email
         }
         
         
@@ -32,7 +39,7 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": "success"
+            "message": "delete success"
         })
 
     }
