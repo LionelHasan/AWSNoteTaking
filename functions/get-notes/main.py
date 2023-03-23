@@ -1,26 +1,24 @@
+# add your get-notes function here
 import json
 import boto3
-from boto3.dynamodb.conditions import Key
-
-dynamodb_resource = boto3.resource("dynamodb")
-table = dynamodb_resource.Table("notes") 
 
 def lambda_handler(event, context):
-
-        # Setting the variable body to the json body attribute (sent by the endpoint via LambdaURL), json loads converts it to a python dictionary
-    email = event["queryStringParameters"]["email"]
-
-    print(event)
+    dynamodb_resource = boto3.resource("dynamodb")
+    table = dynamodb_resource.Table("notes") 
 
     try:
-        res = table.query(KeyConditionExpression=Key("email").eq(email))
-        print(res["Items"])
-            
-        return {
-            "statusCode": 200,
-            "body": json.dumps(res["Items"])
-                }
+        email = event['queryStringParameters']['email']
+        # noteID = event['queryStringParameters']['id']
+        # response = table.get_item(Key={'email': f'{email}', 'id': f'{noteID}'})
 
+        response = table.query( 
+            KeyConditionExpression='email' + ' = :pk', 
+            ExpressionAttributeValues={
+            ':pk': email
+        }
+            )
+        items = response['Items']
+    
     except Exception as exp:
         print("exception: {exp}") # Can send the exception to Cloudwatch
         return {
@@ -29,6 +27,16 @@ def lambda_handler(event, context):
                 "message": str(exp)
             })
         }
-
-
     
+    return {
+        "statusCode": 200,
+        # 'headers': {
+        # 'Content-Type': 'application/json',
+        # },
+        # 'body': json.dumps({
+        # "message": 'success',
+        # 'body' : response,
+        # })
+        'body':json.dumps(items)
+    }
+
