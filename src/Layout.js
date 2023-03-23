@@ -1,7 +1,7 @@
 
 
 import { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { json, Outlet, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import uuid from "react-uuid";
 import Sidebar from "./Sidebar";
@@ -16,16 +16,66 @@ function Layout() {
   const [profile, setProfile] = useState(null);
   const [user, setUser] = useState([]);
 
-
-  const [notes, setNotes] = useState(() => {
-    const yesNote = localStorage.getItem('notes');
-    if (yesNote) {
-      const allNotes = JSON.parse(localStorage.notes)
-      return allNotes;
-    }
-
-    return [];
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => { setUser(codeResponse); setUserLogged(true);},
+    onError: (error) => console.log('Login Failed:', error)
   });
+
+  useEffect(
+    () => {
+      if (user.length != 0) {
+        axios
+          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: 'application/json'
+            }
+          })
+          .then((res) => {
+            setProfile(res.data);
+            getAllNotes();
+          })
+          .catch((err) => console.log(err));
+      }
+    },
+    [user]
+  );
+
+  const logOut = () => {
+    googleLogout();
+    setProfile(null);
+    setUserLogged(false);
+    setNotes([]);
+  };
+
+  // const [notes, setNotes] = useState(() => {
+  //   const yesNote = localStorage.getItem('notes');
+  //   if (yesNote) {
+  //     const allNotes = JSON.parse(localStorage.notes)
+  //     return allNotes;
+  //   }
+
+  //   return [];
+  // });
+  const [notes, setNotes] = useState([]);
+  // console.log(profile.email)
+
+  const getAllNotes = async (profile) => {
+    console.log(profile)
+    try {
+      // let res = await fetch("https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email=ericmeiemail@gmail.com&id=4bd3221b-05c9-13c8-a7ba-5f526dc389b8", {
+      let res = await fetch("https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email=ericmeiemail@gmail.com", {
+      });
+      let jsonRes = await res.json();
+      // console.log(JSON.stringify(jsonRes));
+      console.log(JSON.stringify(jsonRes));
+      setNotes(prevNotes => [...prevNotes, ...jsonRes])
+    }
+    catch (error) {
+      console.log('error fetching data:', error)
+      window("Error fetching email:", error)
+    }
+  };
 
   const [currNote, setCurrNote] = useState(false);
   const getCurrNote = () => {
@@ -48,14 +98,14 @@ function Layout() {
     const answer = window.confirm("Are you sure?");
     if (answer) {
       setNotes(notes.filter((note) => note.id !== idToDel));
-      const answer = window.confirm("Are you sure?");
+      // const answer = window.confirm("Are you sure?"); //I DONT THINK YOU NEED THIS 1 BC IF GIVES THE WINDOW 2 TIMES
     if (answer) {
       setNotes(notes.filter((note) => note.id !== idToDel));
       const newNote = getCurrNote();
       console.log(JSON.stringify({ ...newNote, email: profile.email }))
       console.log(newNote);
 
-      const res = await fetch("https://vtsjzzb5g7o7myq3gpr4axc6bq0amqtj.lambda-url.ca-central-1.on.aws/",
+      const res = await fetch("https://rwpszsvvclus6p5cbemavgwrje0ghvxq.lambda-url.ca-central-1.on.aws/", //CHANGE TO YOUR DELETE-URL LAMBDA FNC 
         {
           method: "DELETE",
           headers: {
@@ -67,11 +117,10 @@ function Layout() {
       );
       const jsonRes = await res.json();
       console.log(JSON.stringify(jsonRes));
-
-      
     }
   }
 }
+
 
   const onUpdateNote = (updatedNote) => {
     const updatedNotesArr = notes.map((note) => {
@@ -85,8 +134,6 @@ function Layout() {
 
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
-
-
   }, [notes]);
 
   const onHideSideBar = () => {
@@ -106,37 +153,7 @@ function Layout() {
     }
   }, [noteID]);
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => { setUser(codeResponse); setUserLogged(true); },
-    onError: (error) => console.log('Login Failed:', error)
-  });
-
-  useEffect(
-    () => {
-      if (user.length != 0) {
-        axios
-          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              Accept: 'application/json'
-            }
-          })
-          .then((res) => {
-            setProfile(res.data);
-          })
-          .catch((err) => console.log(err));
-      }
-    },
-    [user]
-  );
-
-  const logOut = () => {
-    googleLogout();
-    setProfile(null);
-    setUserLogged(false);
-  };
-
- 
+  console.log(notes.id);
 
   return (
     <>
