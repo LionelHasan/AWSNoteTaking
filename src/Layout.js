@@ -100,11 +100,19 @@ function Layout() {
   // }, [profile])
 
   useEffect(() => { if(profile) { //if user not null, get notes
-    console.log(profile.email)
     const asyncEffect = async() => {
     // let promise = await fetch(`https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email='${profile.email}`, {});
     // let promise = await fetch('https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email=ericmeiemail@gmail.com');
-    let promise = await fetch(`https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws/?email=${profile.email}`);
+    let promise = await fetch(`https://drkawvbhcf4g7aepkc6lju2yoq0fjzfj.lambda-url.ca-central-1.on.aws//?email=${profile.email}`, //CHANGE TO YOUR LAMBDA-URL
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "access_token": user.access_token,
+      }, 
+
+    }
+  );
     if (promise.status == 200) {
       // const notes = await promise.json()
       // console.log(JSON.stringify(notes));
@@ -145,10 +153,9 @@ function Layout() {
       setNotes(notes.filter((note) => note.id !== idToDel));
       const newNote = getCurrNote();
       console.log(JSON.stringify({ ...newNote, email: profile.email }))
-      console.log(newNote);
-      console.log(user);
 
-      const res = await fetch("https://rwpszsvvclus6p5cbemavgwrje0ghvxq.lambda-url.ca-central-1.on.aws/", //CHANGE TO YOUR DELETE-URL LAMBDA FNC 
+
+      const res = await fetch(`https://vtsjzzb5g7o7myq3gpr4axc6bq0amqtj.lambda-url.ca-central-1.on.aws/?email=${profile.email}&id=${newNote.id}`, //CHANGE TO YOUR DELETE-URL LAMBDA FNC 
         {
 
           version:"2.0",
@@ -157,7 +164,7 @@ function Layout() {
           rawQueryString: "parameter1=value1&parameter1=value2&parameter2=value",
           headers: {
             "Content-Type": "application/json",
-              "accesstoken": user.access_token,
+              "access_token": user.access_token,
               "email": profile.email,
               "id": newNote.id
           },
@@ -205,7 +212,6 @@ function Layout() {
     }
   }, [noteID]);
 
-  console.log(notes.id);
 
   return (
     <>
