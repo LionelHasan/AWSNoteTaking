@@ -3,7 +3,7 @@ import boto3
 import urllib.request
 
 dynamodb_resource = boto3.resource("dynamodb")
-table = dynamodb_resource.Table("notes") 
+table = dynamodb_resource.Table("notes-30142893") 
 
 def lambda_handler(event, context):
 

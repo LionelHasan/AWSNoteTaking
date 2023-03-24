@@ -34,7 +34,7 @@ def lambda_handler(event, context):
 
     try:
         dynamodb_resource = boto3.resource("dynamodb")
-        table = dynamodb_resource.Table("notes") 
+        table = dynamodb_resource.Table("notes-30142893") 
         email = event['queryStringParameters']['email']
         access_token = event["headers"]["access_token"]
 

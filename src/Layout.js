@@ -30,7 +30,6 @@ function Layout() {
   // console.log(profile)
 
   const [user, setUser] = useState([]);
-  console.log(user, "USER")
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => { setUser(codeResponse); setUserLogged(true); setProfile(); },
