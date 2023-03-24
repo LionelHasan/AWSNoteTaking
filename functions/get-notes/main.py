@@ -11,9 +11,7 @@ def lambda_handler(event, context):
         access_token = event["headers"]["access_token"]
         print(access_token)
         email = event["queryStringParameters"]["email"]
-        id = event["queryStringParameters"]["id"]
 
-        print(id)
 
         google_url = f'https://www.googleapis.com/oauth2/v1/userinfo?access_token={access_token}'
         headers = {'Authorization': f'Bearer {access_token}', 'Accept': 'application/json'}
