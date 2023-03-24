@@ -328,7 +328,7 @@ output "get-url" {
 
 
 resource "aws_dynamodb_table" "notes" {
-  name         = "notes"
+  name         = "notes-30142893"
   billing_mode = "PROVISIONED"
 # up to 8KB read per second (eventually consistent)
   read_capacity = 1
