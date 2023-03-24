@@ -75,8 +75,8 @@ function Layout() {
     console.log(profile)
      if(profile) { //if user not null, get notes
     const asyncEffect = async() => {
-    // let promise = await fetch(`https://drkawvbhcf4g7aepkc6lju2yoq0fjzfj.lambda-url.ca-central-1.on.aws//?email=${profile.email}`, //CHANGE TO YOUR GET-URL
-    let promise = await fetch(`https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws//?email=${profile.email}`, //CHANGE TO YOUR GET-URL
+    let promise = await fetch(`https://drkawvbhcf4g7aepkc6lju2yoq0fjzfj.lambda-url.ca-central-1.on.aws//?email=${profile.email}`, //CHANGE TO YOUR GET-URL
+    // let promise = await fetch(`https://yxjnz7looh3r3fuxvn2u4bfvsu0idmtz.lambda-url.ca-central-1.on.aws//?email=${profile.email}`, //CHANGE TO YOUR GET-URL
     {
       method: "GET",
       headers: {
@@ -121,8 +121,8 @@ function Layout() {
       setNotes(notes.filter((note) => note.id !== idToDel));
       const newNote = getCurrNote();
       console.log(JSON.stringify({ ...newNote, email: profile.email }))
-      // const res = await fetch(`https://vtsjzzb5g7o7myq3gpr4axc6bq0amqtj.lambda-url.ca-central-1.on.aws/?email=${profile.email}&id=${newNote.id}`, //CHANGE TO YOUR DELETE-URL LAMBDA FNC 
-      const res = await fetch(`https://rwpszsvvclus6p5cbemavgwrje0ghvxq.lambda-url.ca-central-1.on.aws/?email=${profile.email}&id=${newNote.id}`, //CHANGE TO YOUR DELETE-URL LAMBDA FNC 
+      const res = await fetch(`https://vtsjzzb5g7o7myq3gpr4axc6bq0amqtj.lambda-url.ca-central-1.on.aws/?email=${profile.email}&id=${newNote.id}`, //CHANGE TO YOUR DELETE-URL LAMBDA FNC 
+      // const res = await fetch(`https://rwpszsvvclus6p5cbemavgwrje0ghvxq.lambda-url.ca-central-1.on.aws/?email=${profile.email}&id=${newNote.id}`, //CHANGE TO YOUR DELETE-URL LAMBDA FNC 
         {
 
           version:"2.0",

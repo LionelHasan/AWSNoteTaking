@@ -28,8 +28,8 @@ function TextEditor( ) {
         const newNote = getCurrNote();
         console.log(JSON.stringify({ ...newNote, email: profile.email}))
         console.log(newNote);
-        // const res = await fetch(`https://si43ha6zkkuq3pr3ja7pf4t7zu0xfpbt.lambda-url.ca-central-1.on.aws/?email=${profile.email}`, //CHANGE TO YOUR LAMBDA-URL
-        const res = await fetch(`https://6e5qripldydrxqklas6c3e5xxu0bnqst.lambda-url.ca-central-1.on.aws/?email=${profile.email}`, //CHANGE TO YOUR LAMBDA-URL
+        const res = await fetch(`https://si43ha6zkkuq3pr3ja7pf4t7zu0xfpbt.lambda-url.ca-central-1.on.aws/?email=${profile.email}`, //CHANGE TO YOUR LAMBDA-URL
+        // const res = await fetch(`https://6e5qripldydrxqklas6c3e5xxu0bnqst.lambda-url.ca-central-1.on.aws/?email=${profile.email}`, //CHANGE TO YOUR LAMBDA-URL
           {
             method: "POST",
             headers: {
